@@ -27,37 +27,52 @@
 
   "filters": {
     "big_signals": {
-      "exclude_keywords": [
-        "champions league",
-        "eredivisie",
-        "benfica",
-        "ajax",
-        "psv",
-        "voetbal",
-        "showbizz",
-        "roddel",
-        "oplichting",
-        "roofoverval"
+      "include_keywords": [
+        "interest rate",
+        "inflation",
+        "central bank",
+        "ecb",
+        "fed",
+        "tariff",
+        "trade",
+        "sanctions",
+        "geopolit",
+        "supply chain",
+        "reshoring",
+        "nearshoring",
+        "capex",
+        "ai investment",
+        "data center",
+        "nvidia",
+        "energy",
+        "oil",
+        "gas",
+        "shipping",
+        "freight",
+        "red sea",
+        "transport cost"
       ]
     },
+
+    "markets": {
+      "exclude_keywords": [
+        "movers",
+        "live coverage",
+        "earnings call transcript",
+        "joe rogan",
+        "celebrity"
+      ]
+    },
+
     "europe_nl": {
       "exclude_keywords": [
-        "champions league",
-        "eredivisie",
         "voetbal",
+        "eredivisie",
         "misdaad",
         "showbizz",
         "roddel",
         "oplichting",
         "roofoverval"
-      ]
-    },
-    "markets": {
-      "exclude_keywords": [
-        "movers",
-        "live coverage",
-        "joe rogan",
-        "viral"
       ]
     }
   },
@@ -71,32 +86,16 @@
       "McKinsey",
       "Gartner",
       "FD"
-    ],
-    "exclude_keywords": [
-      "free trial",
-      "promotion",
-      "limited-time",
-      "sign up"
-    ]
-  },
-
-  "gaming_rules": {
-    "major_keywords": [
-      "release date",
-      "launch",
-      "review",
-      "metacritic",
-      "trailer",
-      "gta",
-      "elder scrolls",
-      "witcher",
-      "playstation",
-      "xbox",
-      "nintendo"
     ]
   },
 
   "rss": {
+
+    "big_signals": [
+      "https://www.reutersagency.com/feed/?best-topics=business-finance&post_type=best",
+      "https://www.reutersagency.com/feed/?best-topics=world&post_type=best",
+      "https://feeds.ft.com/ftworldnews"
+    ],
 
     "supply_chain": [
       "https://www.supplychaindive.com/feeds/news/",
@@ -112,7 +111,8 @@
     ],
 
     "europe_nl": [
-      "https://www.nu.nl/rss/Algemeen"
+      "https://www.nu.nl/rss/Economie",
+      "https://www.nu.nl/rss/Buitenland"
     ],
 
     "gaming_major": [
