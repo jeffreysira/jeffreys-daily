@@ -1,18 +1,87 @@
 {
   "title": "Jeffrey’s Daily",
   "lookback_hours": 24,
-  "max_items_total": 35,
+
+  "summary_default_maxlen": 180,
+  "summary_maxlen": {
+    "big_signals": 170,
+    "supply_chain": 180,
+    "markets": 180,
+    "tech_ai_apple": 170,
+    "europe_nl": 170,
+    "reddit": 170,
+    "gaming_major": 170,
+    "podcasts_new": 180
+  },
+
   "sections": {
     "big_signals": { "max_items": 5 },
-    "supply_chain": { "max_items": 8 },
+    "supply_chain": { "max_items": 7 },
     "deep_dive": { "max_items": 1 },
-    "markets": { "max_items": 6 },
+    "markets": { "max_items": 5 },
     "tech_ai_apple": { "max_items": 6 },
     "europe_nl": { "max_items": 5 },
     "reddit": { "max_items": 5 },
     "gaming_major": { "max_items": 2 },
     "podcasts_new": { "max_items": 10 }
   },
+
+  "max_per_source": {
+    "big_signals": 2,
+    "markets": 2,
+    "supply_chain": 3,
+    "tech_ai_apple": 3,
+    "europe_nl": 3,
+    "reddit": 3,
+    "gaming_major": 2,
+    "podcasts_new": 5
+  },
+
+  "filters": {
+    "big_signals": {
+      "exclude_keywords": [
+        "champions league", "eredivisie", "benfica", "real madrid", "ajax", "psv",
+        "voetbal", "transfer", "overval", "oplichting", "showbizz", "roddel"
+      ]
+    },
+    "europe_nl": {
+      "exclude_keywords": [
+        "champions league", "eredivisie", "benfica", "real madrid", "ajax", "psv",
+        "voetbal", "transfer", "misdaad", "roofoverval", "oplichting", "zeden",
+        "showbizz", "roddel"
+      ]
+    },
+    "markets": {
+      "exclude_keywords": [
+        "movers", "today's movers", "live coverage", "joe rogan", "celebrity",
+        "reasonable", "viral"
+      ]
+    }
+  },
+
+  "deep_dive": {
+    "allowed_sources_contains": [
+      "Supply Chain Dive",
+      "The Loadstar",
+      "Journal of Commerce",
+      "Lloyd",
+      "McKinsey",
+      "Gartner",
+      "FD"
+    ],
+    "exclude_keywords": [
+      "free trial", "promotion", "limited-time", "trial", "sign up"
+    ]
+  },
+
+  "gaming_rules": {
+    "major_keywords": [
+      "release date", "launch", "review", "metacritic", "trailer", "announcement",
+      "gta", "elder scrolls", "witcher", "rockstar", "bethesda", "nintendo",
+      "playstation", "xbox"
+    ]
+  },
+
   "rss": {
     "supply_chain": [
       "https://www.supplychaindive.com/feeds/news/",
@@ -22,12 +91,10 @@
       "https://feeds.finance.yahoo.com/rss/2.0/headline?s=%5EGSPC&region=US&lang=en-US"
     ],
     "tech_ai_apple": [
-      "https://www.wired.com/feed/rss",
       "https://tweakers.net/feeds/mixed.xml"
     ],
     "europe_nl": [
-      "https://www.nu.nl/rss/Algemeen",
-      "https://www.reddit.com/r/europe/.rss"
+      "https://www.nu.nl/rss/Algemeen"
     ],
     "gaming_major": [
       "https://www.polygon.com/rss/index.xml"
@@ -36,10 +103,11 @@
       "https://feeds.simplecast.com/54nAGcIl"
     ]
   },
+
   "reddit": {
     "enabled": true,
-    "subreddits": ["ChatGPT", "Notion", "Stoicism", "digitalminimalism", "supplychain"],
-    "limit_per_subreddit": 15,
-    "min_upvotes": 100
+    "subreddits": ["ChatGPT", "Notion", "Stoicism", "digitalminimalism", "supplychain", "europe"],
+    "limit_per_subreddit": 20,
+    "min_upvotes": 150
   }
 }
