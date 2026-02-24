@@ -55,12 +55,29 @@
     },
 
     "markets": {
+      "include_keywords": [
+        "inflation",
+        "interest rate",
+        "central bank",
+        "fed",
+        "ecb",
+        "bond yield",
+        "liquidity",
+        "recession",
+        "soft landing",
+        "outlook",
+        "sector",
+        "semiconductor",
+        "ai",
+        "capex"
+      ],
       "exclude_keywords": [
-        "movers",
-        "live coverage",
+        "stock movers",
         "earnings call transcript",
-        "joe rogan",
-        "celebrity"
+        "price target",
+        "analyst rating",
+        "upgrades",
+        "downgrades"
       ]
     },
 
@@ -103,7 +120,8 @@
     ],
 
     "markets": [
-      "https://feeds.finance.yahoo.com/rss/2.0/headline?s=%5EGSPC&region=US&lang=en-US"
+      "https://feeds.finance.yahoo.com/rss/2.0/headline?s=%5EGSPC&region=US&lang=en-US",
+      "https://www.reutersagency.com/feed/?best-topics=business-finance&post_type=best"
     ],
 
     "tech_ai_apple": [
