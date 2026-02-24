@@ -1,0 +1,21 @@
+services:
+  - type: cron
+    name: jeffreys-daily
+    env: python
+    plan: starter
+    schedule: "0 18 * * *" # 18:00 UTC = 19:00 Europe/Amsterdam (CET). Zomer: 20:00.
+    buildCommand: "pip install -r requirements.txt"
+    startCommand: "python run_digest.py"
+    envVars:
+      - key: RESEND_API_KEY
+        sync: false
+      - key: DIGEST_TO_EMAIL
+        sync: false
+      - key: DIGEST_FROM_EMAIL
+        sync: false
+      - key: REDDIT_CLIENT_ID
+        sync: false
+      - key: REDDIT_CLIENT_SECRET
+        sync: false
+      - key: REDDIT_USER_AGENT
+        value: "jeffreys-daily/0.1"
