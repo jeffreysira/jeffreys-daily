@@ -1,0 +1,45 @@
+{
+  "title": "Jeffrey’s Daily",
+  "lookback_hours": 24,
+  "max_items_total": 35,
+  "sections": {
+    "big_signals": { "max_items": 5 },
+    "supply_chain": { "max_items": 8 },
+    "deep_dive": { "max_items": 1 },
+    "markets": { "max_items": 6 },
+    "tech_ai_apple": { "max_items": 6 },
+    "europe_nl": { "max_items": 5 },
+    "reddit": { "max_items": 5 },
+    "gaming_major": { "max_items": 2 },
+    "podcasts_new": { "max_items": 10 }
+  },
+  "rss": {
+    "supply_chain": [
+      "https://www.supplychaindive.com/feeds/news/",
+      "https://www.freightwaves.com/feed"
+    ],
+    "markets": [
+      "https://feeds.finance.yahoo.com/rss/2.0/headline?s=%5EGSPC&region=US&lang=en-US"
+    ],
+    "tech_ai_apple": [
+      "https://www.wired.com/feed/rss",
+      "https://tweakers.net/feeds/mixed.xml"
+    ],
+    "europe_nl": [
+      "https://www.nu.nl/rss/Algemeen",
+      "https://www.reddit.com/r/europe/.rss"
+    ],
+    "gaming_major": [
+      "https://www.polygon.com/rss/index.xml"
+    ],
+    "podcasts_new": [
+      "https://feeds.simplecast.com/54nAGcIl"
+    ]
+  },
+  "reddit": {
+    "enabled": true,
+    "subreddits": ["ChatGPT", "Notion", "Stoicism", "digitalminimalism", "supplychain"],
+    "limit_per_subreddit": 15,
+    "min_upvotes": 100
+  }
+}
