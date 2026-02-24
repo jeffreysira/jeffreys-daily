@@ -26,70 +26,47 @@
   },
 
   "filters": {
+
     "big_signals": {
       "include_keywords": [
-        "interest rate",
-        "inflation",
-        "central bank",
-        "ecb",
-        "fed",
-        "tariff",
-        "trade",
-        "sanctions",
-        "geopolit",
-        "supply chain",
-        "reshoring",
-        "nearshoring",
-        "capex",
-        "ai investment",
-        "data center",
-        "nvidia",
-        "energy",
-        "oil",
-        "gas",
-        "shipping",
-        "freight",
-        "red sea",
-        "transport cost"
+        "interest rate","inflation","central bank","ecb","fed",
+        "tariff","trade","sanctions","geopolit",
+        "supply chain","reshoring","nearshoring",
+        "capex","ai investment","data center","nvidia",
+        "energy","oil","gas","shipping","freight","red sea","transport cost"
       ]
     },
 
     "markets": {
       "include_keywords": [
-        "inflation",
-        "interest rate",
-        "central bank",
-        "fed",
-        "ecb",
-        "bond yield",
-        "liquidity",
-        "recession",
-        "soft landing",
-        "outlook",
-        "sector",
-        "semiconductor",
-        "ai",
-        "capex"
+        "inflation","interest rate","central bank","fed","ecb",
+        "bond yield","liquidity","recession","soft landing",
+        "outlook","sector","semiconductor","ai","capex"
       ],
       "exclude_keywords": [
-        "stock movers",
-        "earnings call transcript",
-        "price target",
-        "analyst rating",
-        "upgrades",
-        "downgrades"
+        "stock movers","earnings call transcript",
+        "price target","analyst rating","upgrades","downgrades"
+      ]
+    },
+
+    "supply_chain": {
+      "include_keywords": [
+        "network","inventory","warehouse","distribution",
+        "automation","robotics","fulfillment",
+        "retail logistics","3pl","capacity","rates",
+        "trade lane","cross-border","customs","tariff",
+        "freight market","container","port","shipping"
+      ],
+      "exclude_keywords": [
+        "crash","accident","fatal","driver","highway",
+        "police","truck stop","weather delay"
       ]
     },
 
     "europe_nl": {
       "exclude_keywords": [
-        "voetbal",
-        "eredivisie",
-        "misdaad",
-        "showbizz",
-        "roddel",
-        "oplichting",
-        "roofoverval"
+        "voetbal","eredivisie","misdaad",
+        "showbizz","roddel","oplichting","roofoverval"
       ]
     }
   },
@@ -116,7 +93,8 @@
 
     "supply_chain": [
       "https://www.supplychaindive.com/feeds/news/",
-      "https://www.freightwaves.com/feed"
+      "https://www.freightwaves.com/feed",
+      "https://theloadstar.com/feed/"
     ],
 
     "markets": [
