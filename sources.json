@@ -1,131 +1,362 @@
 {
-  "title": "Jeffrey’s Daily",
-  "lookback_hours": 24,
-
-  "summary_default_maxlen": 180,
-
-  "sections": {
-    "big_signals": { "max_items": 5 },
-    "supply_chain": { "max_items": 7 },
-    "deep_dive": { "max_items": 1 },
-    "markets": { "max_items": 5 },
-    "tech_ai_apple": { "max_items": 6 },
-    "europe_nl": { "max_items": 5 },
-    "reddit": { "max_items": 5 },
-    "gaming_major": { "max_items": 2 },
-    "podcasts_new": { "max_items": 10 }
+  "meta": {
+    "digest_name": "Jeffrey’s Daily",
+    "send_time_local": "19:00",
+    "timezone": "Europe/Amsterdam",
+    "reading_time_target_min": 10,
+    "reading_time_target_max": 20,
+    "dynamic_sections": true,
+    "regions": ["NL", "BE", "DE", "FR", "IT", "ES", "PL", "UK", "US", "WORLD"],
+    "eu_core_countries": ["BE", "DE", "FR", "IT", "ES", "PL"]
   },
 
-  "max_per_source": {
-    "big_signals": 2,
-    "markets": 2,
-    "supply_chain": 3,
-    "tech_ai_apple": 3,
-    "europe_nl": 3,
-    "reddit": 2
-  },
-
-  "filters": {
-
-    "big_signals": {
-      "include_keywords": [
-        "interest rate","inflation","central bank","ecb","fed",
-        "tariff","trade","sanctions","geopolit",
-        "supply chain","reshoring","nearshoring",
-        "capex","ai investment","data center","nvidia",
-        "energy","oil","gas","shipping","freight","red sea","transport cost"
-      ]
+  "selection": {
+    "max_items_total": 40,
+    "dedupe": {
+      "enabled": true,
+      "title_similarity_threshold": 0.88,
+      "prefer_higher_priority": true
     },
-
-    "markets": {
-      "include_keywords": [
-        "inflation","interest rate","central bank","fed","ecb",
-        "bond yield","liquidity","recession","soft landing",
-        "outlook","sector","semiconductor","ai","capex"
-      ],
-      "exclude_keywords": [
-        "stock movers","earnings call transcript",
-        "price target","analyst rating","upgrades","downgrades"
-      ]
+    "mixing": {
+      "discovery_ratio": 0.12,
+      "max_discovery_items": 5,
+      "consultancy_priority": "MEDIUM"
     },
-
-    "supply_chain": {
-      "include_keywords": [
-        "network","inventory","warehouse","distribution",
-        "automation","robotics","fulfillment",
-        "retail logistics","3pl","capacity","rates",
-        "trade lane","cross-border","customs","tariff",
-        "freight market","container","port","shipping"
-      ],
-      "exclude_keywords": [
-        "crash","accident","fatal","driver","highway",
-        "police","truck stop","weather delay"
-      ]
-    },
-
-    "europe_nl": {
-      "exclude_keywords": [
-        "voetbal","eredivisie","misdaad",
-        "showbizz","roddel","oplichting","roofoverval"
-      ]
+    "todays_focus": {
+      "enabled": true,
+      "max_items": 3,
+      "sources_from_sections": ["critical_signals", "work_intelligence"]
     }
   },
 
-  "deep_dive": {
-    "allowed_sources_contains": [
-      "Supply Chain Dive",
-      "FreightWaves",
-      "The Loadstar",
-      "Journal of Commerce",
-      "McKinsey",
-      "Gartner",
-      "FD"
-    ]
-  },
+  "sections": [
+    {
+      "id": "critical_signals",
+      "title": "🔝 Critical Signals",
+      "subtitle": "Macro, geopolitiek, energie, trade flows, AI-capex",
+      "max_items": 8,
+      "sources": [
+        {
+          "name": "Reuters – Business/Finance (best)",
+          "region": "WORLD",
+          "priority": "HIGH",
+          "type": "rss",
+          "url": "https://www.reutersagency.com/feed/?best-topics=business-finance&post_type=best"
+        },
+        {
+          "name": "Reuters – World (best)",
+          "region": "WORLD",
+          "priority": "HIGH",
+          "type": "rss",
+          "url": "https://www.reutersagency.com/feed/?best-topics=world&post_type=best"
+        },
+        {
+          "name": "Financial Times – World",
+          "region": "WORLD",
+          "priority": "HIGH",
+          "type": "rss",
+          "url": "https://feeds.ft.com/ftworldnews"
+        },
+        {
+          "name": "BIS – RSS index (choose subfeeds later)",
+          "region": "WORLD",
+          "priority": "MEDIUM",
+          "type": "rss",
+          "url": "https://www.bis.org/rss/index.htm"
+        },
+        {
+          "name": "IMF Blog",
+          "region": "WORLD",
+          "priority": "MEDIUM",
+          "type": "rss",
+          "url": "https://www.imf.org/en/blogs/rss"
+        }
+      ]
+    },
 
-  "rss": {
+    {
+      "id": "work_intelligence",
+      "title": "📦 Work Intelligence",
+      "subtitle": "NL/EU/UK/US supply chain, transport, retail, trade & compliance",
+      "max_items": 16,
+      "sources": [
+        {
+          "name": "Logistiek.nl (NL)",
+          "region": "NL",
+          "priority": "HIGH",
+          "type": "rss",
+          "url": "https://www.logistiek.nl/rss"
+        },
+        {
+          "name": "Supply Chain Dive (US)",
+          "region": "US",
+          "priority": "HIGH",
+          "type": "rss",
+          "url": "https://www.supplychaindive.com/feeds/news/"
+        },
+        {
+          "name": "Retail Dive (US)",
+          "region": "US",
+          "priority": "HIGH",
+          "type": "rss",
+          "url": "https://www.retaildive.com/feeds/news/"
+        },
+        {
+          "name": "DC Velocity (US)",
+          "region": "US",
+          "priority": "HIGH",
+          "type": "rss",
+          "url": "https://www.dcvelocity.com/rss"
+        },
+        {
+          "name": "Modern Retail (US)",
+          "region": "US",
+          "priority": "MEDIUM",
+          "type": "rss",
+          "url": "https://www.modernretail.co/feed/"
+        },
+        {
+          "name": "The Loadstar (Global)",
+          "region": "WORLD",
+          "priority": "HIGH",
+          "type": "rss",
+          "url": "https://theloadstar.com/feed/"
+        },
+        {
+          "name": "Journal of Commerce (Global)",
+          "region": "WORLD",
+          "priority": "HIGH",
+          "type": "rss",
+          "url": "https://www.joc.com/rss.xml"
+        },
+        {
+          "name": "FreightWaves (US/Global)",
+          "region": "US",
+          "priority": "MEDIUM",
+          "type": "rss",
+          "url": "https://www.freightwaves.com/feed"
+        }
+      ]
+    },
 
-    "big_signals": [
-      "https://www.reutersagency.com/feed/?best-topics=business-finance&post_type=best",
-      "https://www.reutersagency.com/feed/?best-topics=world&post_type=best",
-      "https://feeds.ft.com/ftworldnews"
+    {
+      "id": "macro_markets",
+      "title": "📊 Macro & Markets",
+      "subtitle": "Demand drivers + commodities + crypto only when meaningful",
+      "max_items": 8,
+      "sources": [
+        {
+          "name": "Reuters – Business/Finance (best)",
+          "region": "WORLD",
+          "priority": "HIGH",
+          "type": "rss",
+          "url": "https://www.reutersagency.com/feed/?best-topics=business-finance&post_type=best"
+        },
+        {
+          "name": "Yahoo Finance – ^GSPC headlines",
+          "region": "US",
+          "priority": "MEDIUM",
+          "type": "rss",
+          "url": "https://feeds.finance.yahoo.com/rss/2.0/headline?s=%5EGSPC&region=US&lang=en-US"
+        },
+        {
+          "name": "CoinDesk (markets)",
+          "region": "US",
+          "priority": "DISCOVERY",
+          "type": "rss",
+          "url": "https://www.coindesk.com/arc/outboundfeeds/rss/?outputType=xml"
+        }
+      ]
+    },
+
+    {
+      "id": "tech_tools",
+      "title": "🧰 Tech / Tools / Productivity",
+      "subtitle": "AI tools, workflows, Notion, Apple ecosystem (high signal)",
+      "max_items": 10,
+      "sources": [
+        {
+          "name": "Product Hunt (new posts)",
+          "region": "US",
+          "priority": "HIGH",
+          "type": "rss",
+          "url": "https://www.producthunt.com/feed"
+        },
+        {
+          "name": "MIT Technology Review",
+          "region": "US",
+          "priority": "MEDIUM",
+          "type": "rss",
+          "url": "https://www.technologyreview.com/feed/"
+        },
+        {
+          "name": "Tweakers (NL)",
+          "region": "NL",
+          "priority": "MEDIUM",
+          "type": "rss",
+          "url": "https://tweakers.net/feeds/mixed.xml"
+        },
+        {
+          "name": "Bright (NL)",
+          "region": "NL",
+          "priority": "DISCOVERY",
+          "type": "rss",
+          "url": "https://www.bright.nl/feed/news.xml"
+        },
+        {
+          "name": "iCulture (Apple)",
+          "region": "NL",
+          "priority": "DISCOVERY",
+          "type": "rss",
+          "url": "https://www.iculture.nl/feed/"
+        }
+      ]
+    },
+
+    {
+      "id": "blogs_essays",
+      "title": "🌐 Blogs & Essays",
+      "subtitle": "Denkkracht: mental models, geopolitiek, systems thinking",
+      "max_items": 8,
+      "sources": [
+        {
+          "name": "Aeon Essays",
+          "region": "WORLD",
+          "priority": "DISCOVERY",
+          "type": "rss",
+          "url": "https://aeon.co/feed.rss"
+        },
+        {
+          "name": "The Atlantic",
+          "region": "US",
+          "priority": "MEDIUM",
+          "type": "rss",
+          "url": "https://www.theatlantic.com/feed/all/"
+        },
+        {
+          "name": "Farnam Street",
+          "region": "US",
+          "priority": "MEDIUM",
+          "type": "rss",
+          "url": "https://fs.blog/feed/"
+        },
+        {
+          "name": "Nautilus",
+          "region": "US",
+          "priority": "DISCOVERY",
+          "type": "rss",
+          "url": "https://nautil.us/feed/"
+        }
+      ]
+    },
+
+    {
+      "id": "gaming",
+      "title": "🎮 Gaming (major only)",
+      "subtitle": "Releases, reviews, industry moves",
+      "max_items": 6,
+      "sources": [
+        {
+          "name": "VGC",
+          "region": "UK",
+          "priority": "HIGH",
+          "type": "rss",
+          "url": "https://www.videogameschronicle.com/feed/"
+        },
+        {
+          "name": "Polygon",
+          "region": "US",
+          "priority": "HIGH",
+          "type": "rss",
+          "url": "https://www.polygon.com/rss/index.xml"
+        },
+        {
+          "name": "GamesIndustry.biz",
+          "region": "UK",
+          "priority": "MEDIUM",
+          "type": "rss",
+          "url": "https://www.gamesindustry.biz/feed/news"
+        },
+        {
+          "name": "IGN",
+          "region": "US",
+          "priority": "DISCOVERY",
+          "type": "rss",
+          "url": "https://feeds.ign.com/ign/all"
+        }
+      ]
+    },
+
+    {
+      "id": "podcasts",
+      "title": "🎧 Podcasts (new episodes only)",
+      "subtitle": "Only when a new episode drops",
+      "max_items": 4,
+      "sources": [
+        {
+          "name": "Doorzetters",
+          "region": "NL",
+          "priority": "HIGH",
+          "type": "rss",
+          "url": "https://feeds.megaphone.fm/doorzetters"
+        },
+        {
+          "name": "V for Valentine",
+          "region": "NL",
+          "priority": "HIGH",
+          "type": "rss",
+          "url": "https://anchor.fm/s/ae48999c/podcast/rss"
+        }
+      ]
+    },
+
+    {
+      "id": "books",
+      "title": "📚 Book Intelligence",
+      "subtitle": "New bestsellers & notable releases",
+      "max_items": 4,
+      "sources": [
+        {
+          "name": "Financial Times – Books",
+          "region": "WORLD",
+          "priority": "HIGH",
+          "type": "rss",
+          "url": "https://www.ft.com/books?format=rss"
+        },
+        {
+          "name": "NYT – Books",
+          "region": "US",
+          "priority": "MEDIUM",
+          "type": "rss",
+          "url": "https://rss.nytimes.com/services/xml/rss/nyt/Books.xml"
+        }
+      ]
+    }
+  ],
+
+  "manual_or_non_rss_sources": {
+    "critical_signals": [
+      "Bloomberg – Economy / Supply Chains (often paywalled / no stable public RSS)",
+      "IEA (IEA news page exists; RSS endpoint varies)",
+      "Nikkei Asia (usually paywalled)"
     ],
-
-    "supply_chain": [
-      "https://www.supplychaindive.com/feeds/news/",
-      "https://www.freightwaves.com/feed",
-      "https://theloadstar.com/feed/"
+    "work_intelligence": [
+      "Transport Online (need to confirm their RSS endpoint)",
+      "Distrifood (RSS unclear; might be newsletter-only)",
+      "Twinkle (RSS unclear for modern site)",
+      "Evofenedex / Douane NL (may be newsletter or page-based)",
+      "Flows.be, Lebensmittel Zeitung, DVZ (often behind paywalls)",
+      "LSA, Supply Chain Magazine France, Il Sole 24 Ore, El Mercantil (RSS varies)"
     ],
-
-    "markets": [
-      "https://feeds.finance.yahoo.com/rss/2.0/headline?s=%5EGSPC&region=US&lang=en-US",
-      "https://www.reutersagency.com/feed/?best-topics=business-finance&post_type=best"
+    "tech_tools": [
+      "Futurepedia (RSS unclear)",
+      "Ben’s Bites / The Rundown AI (often email-first)"
     ],
-
-    "tech_ai_apple": [
-      "https://tweakers.net/feeds/mixed.xml"
+    "podcasts": [
+      "Top trending episode charts (Spotify/Apple charts require separate integration)"
     ],
-
-    "europe_nl": [
-      "https://www.nu.nl/rss/Economie",
-      "https://www.nu.nl/rss/Buitenland"
-    ],
-
-    "gaming_major": [
-      "https://www.polygon.com/rss/index.xml"
-    ],
-
-    "podcasts_new": [
-      "https://feeds.simplecast.com/54nAGcIl"
-    ],
-
-    "reddit": [
-      "https://www.reddit.com/r/ChatGPT/top/.rss?t=day",
-      "https://www.reddit.com/r/Notion/top/.rss?t=day",
-      "https://www.reddit.com/r/stoicism/top/.rss?t=day",
-      "https://www.reddit.com/r/digitalminimalism/top/.rss?t=day",
-      "https://www.reddit.com/r/supplychain/top/.rss?t=day",
-      "https://www.reddit.com/r/europe/top/.rss?t=day"
+    "books": [
+      "Goodreads/Amazon charts (no clean RSS; requires scraping/API later)"
     ]
   }
 }
