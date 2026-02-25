@@ -1,14 +1,12 @@
 name: Jeffrey’s Daily (19:00)
 
 on:
-  # Tijdelijk: elke 15 min om te testen of schedules lopen
   schedule:
+    # Test: elke 15 min (UTC). Met offset om GitHub schedule registratie te forceren.
     - cron: "*/15 * * * *"
-
-  # Handmatig kunnen starten
+    - cron: "7-59/15 * * * *"
   workflow_dispatch: {}
-
-  # Hack: forceer GitHub om workflow + schedule goed te registreren
+  # Tijdelijk laten staan totdat schedule zichtbaar werkt
   push:
     branches:
       - main
@@ -16,8 +14,14 @@ on:
 jobs:
   run-digest:
     runs-on: ubuntu-latest
-
     steps:
+      - name: Debug trigger
+        run: |
+          echo "event_name=${{ github.event_name }}"
+          echo "ref=${{ github.ref }}"
+          echo "actor=${{ github.actor }}"
+          echo "scheduled=${{ github.event.schedule }}"
+
       - name: Checkout repo
         uses: actions/checkout@v4
 
