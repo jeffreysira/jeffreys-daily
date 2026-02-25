@@ -1,7 +1,3 @@
-# =============================
-# Jeffrey’s Daily – run_digest.py
-# =============================
-
 import json
 import os
 import re
@@ -15,23 +11,19 @@ import feedparser
 import requests
 from dateutil import tz
 
-# -------------------------
-# SECTION MAPPING
-# -------------------------
 
+# Map your new JSON section IDs -> existing email layout keys
 SECTION_ALIASES = {
     "critical_signals": "big_signals",
     "work_intelligence": "supply_chain",
     "macro_markets": "markets",
     "tech_tools": "tech_ai_apple",
-    "blogs_essays": "deep_dive",
+    "blogs_essays": "deep_dive",      # essays/longreads as deep dive bucket for now
     "gaming": "gaming_major",
-    "podcasts": "podcasts_new"
+    "podcasts": "podcasts_new",
+    "books": "deep_dive"             # books can also live under deep dive for now
 }
 
-# -------------------------
-# DATA CLASS
-# -------------------------
 
 @dataclass
 class Item:
@@ -45,9 +37,8 @@ class Item:
 
 
 # -------------------------
-# CONFIG
+# Config / helpers
 # -------------------------
-
 def load_config(path: str = "sources.json") -> Dict[str, Any]:
     with open(path, "r", encoding="utf-8") as f:
         return json.load(f)
@@ -56,10 +47,6 @@ def load_config(path: str = "sources.json") -> Dict[str, Any]:
 def now_utc() -> datetime:
     return datetime.now(timezone.utc)
 
-
-# -------------------------
-# HELPERS
-# -------------------------
 
 def parse_entry_datetime(entry) -> Optional[datetime]:
     t = getattr(entry, "published_parsed", None) or getattr(entry, "updated_parsed", None)
@@ -96,9 +83,8 @@ def esc(s: str) -> str:
 
 
 # -------------------------
-# SCORING
+# Scoring / selection
 # -------------------------
-
 def basic_score(published_utc: Optional[datetime], summary_len: int) -> float:
     score = 0.0
     if published_utc:
@@ -108,26 +94,18 @@ def basic_score(published_utc: Optional[datetime], summary_len: int) -> float:
     return score
 
 
-# -------------------------
-# DEDUPE / PICK
-# -------------------------
-
 def dedupe(items: List[Item]) -> List[Item]:
     seen_links = set()
     seen_titles = set()
     out: List[Item] = []
-
     for it in sorted(items, key=lambda x: x.score, reverse=True):
-        lk = it.link.lower()
+        lk = (it.link or "").strip().lower()
         tk = norm_title(it.title)
-
         if lk in seen_links or tk in seen_titles:
             continue
-
         seen_links.add(lk)
         seen_titles.add(tk)
         out.append(it)
-
     return out
 
 
@@ -135,158 +113,178 @@ def pick(items: List[Item], n: int) -> List[Item]:
     return sorted(items, key=lambda x: x.score, reverse=True)[:n]
 
 
-# -------------------------
-# RSS FETCH
-# -------------------------
-
-def fetch_rss_section(section: str, urls: List[str], since_utc: datetime) -> List[Item]:
-
-    mapped_section = SECTION_ALIASES.get(section, section)
-
+def cap_per_source(items: List[Item], max_per_source: int) -> List[Item]:
+    if max_per_source <= 0:
+        return items
     out: List[Item] = []
+    counts: Dict[str, int] = {}
+    for it in sorted(items, key=lambda x: x.score, reverse=True):
+        counts[it.source] = counts.get(it.source, 0) + 1
+        if counts[it.source] <= max_per_source:
+            out.append(it)
+    return out
 
-    for url in urls:
+
+# -------------------------
+# Fetch RSS for a JSON section
+# -------------------------
+def fetch_section_from_json(section_id: str, sources: List[Dict[str, Any]], since_utc: datetime) -> List[Item]:
+    out: List[Item] = []
+    mapped_section = SECTION_ALIASES.get(section_id, section_id)
+
+    for src in sources:
+        if (src.get("type") or "").lower() != "rss":
+            continue
+        url = (src.get("url") or "").strip()
+        if not url or url.startswith("TODO_"):
+            continue
+
         feed = feedparser.parse(url)
-        feed_title = getattr(feed.feed, "title", url)
+        feed_title = getattr(feed.feed, "title", src.get("name") or url)
 
         for e in feed.entries:
-
             dt = parse_entry_datetime(e)
             if dt and dt < since_utc:
                 continue
 
             title = clean_text(getattr(e, "title", ""), 140)
-            link = getattr(e, "link", "").strip()
-            summary = clean_text(getattr(e, "summary", "") or "", 220)
+            link = (getattr(e, "link", "") or "").strip()
+
+            summary_raw = getattr(e, "summary", "") or getattr(e, "description", "") or ""
+            summary = clean_text(summary_raw, 220)
 
             if not title or not link:
                 continue
 
-            item = Item(
+            it = Item(
                 section=mapped_section,
                 source=f"RSS: {feed_title}",
                 title=title,
                 link=link,
                 published_utc=dt,
                 summary=summary,
-                score=0.0
+                score=0.0,
             )
-
-            item.score = basic_score(dt, len(summary))
-            out.append(item)
+            it.score = basic_score(dt, len(summary))
+            out.append(it)
 
     return out
 
 
 # -------------------------
-# EMAIL RENDER
+# Email rendering
 # -------------------------
-
-def section_block(title: str, items: List[Item]) -> str:
-
+def section_block(emoji: str, heading: str, items: List[Item]) -> str:
     if not items:
         return ""
 
     lis = []
-
     for it in items:
-        lis.append(f"""
-        <li>
-        <b>{esc(it.title)}</b><br>
-        {esc(it.summary)}<br>
-        <small><a href="{esc(it.link)}">Open source</a> · {esc(it.source)}</small>
-        </li>
-        """)
-
-    return f"<h2>{title}</h2><ul>{''.join(lis)}</ul>"
-
-
-def render_email_html(cfg: Dict[str, Any], sections: Dict[str, List[Item]]) -> str:
-
-    date_str = format_date_local(now_utc())
+        lis.append(
+            f"""
+            <li style="margin:0 0 12px 0;">
+              <div style="font-weight:700;">{esc(it.title)}</div>
+              <div style="margin-top:4px;">{esc(it.summary)}</div>
+              <div style="margin-top:4px;font-size:12px;color:#555;">
+                <a href="{esc(it.link)}">Open source</a> · {esc(it.source)}
+              </div>
+            </li>
+            """
+        )
 
     return f"""
-    <h1>{cfg.get("meta", {}).get("digest_name", "Jeffrey’s Daily")} — 19:00</h1>
-    <div>{date_str}</div>
-
-    {section_block("🔝 Big Signals Today", sections.get("big_signals", []))}
-    {section_block("📦 Supply Chain & Business", sections.get("supply_chain", []))}
-    {section_block("🔎 Deep dive", sections.get("deep_dive", []))}
-    {section_block("📈 Markets & Investing", sections.get("markets", []))}
-    {section_block("🤖 Tech / AI / Apple", sections.get("tech_ai_apple", []))}
-    {section_block("🎮 Gaming", sections.get("gaming_major", []))}
-    {section_block("🎧 Podcasts", sections.get("podcasts_new", []))}
+    <h2 style="margin:22px 0 8px 0;">{emoji} {esc(heading)}</h2>
+    <ul style="padding-left:18px;margin:0;">
+      {''.join(lis)}
+    </ul>
     """
 
 
-# -------------------------
-# SEND MAIL
-# -------------------------
+def render_email_html(cfg: Dict[str, Any], sections: Dict[str, List[Item]]) -> str:
+    meta = cfg.get("meta", {}) or {}
+    title = meta.get("digest_name", "Jeffrey’s Daily")
+    date_str = format_date_local(now_utc(), meta.get("timezone", "Europe/Amsterdam"))
 
-def send_via_resend(subject: str, html_body: str):
+    html_out = f"""
+    <div style="font-family:-apple-system,Segoe UI,Roboto,Arial; line-height:1.35;">
+      <h1 style="margin:0 0 6px 0;">{esc(title)} — 19:00</h1>
+      <div style="color:#666;margin:0 0 18px 0;">{esc(date_str)} · Leestijd: ±10–20 min</div>
+
+      {section_block("🔝", "Big Signals Today", sections.get("big_signals", []))}
+      {section_block("📦", "Supply Chain & Business", sections.get("supply_chain", []))}
+      {section_block("🔎", "Deep dive", sections.get("deep_dive", []))}
+      {section_block("📈", "Markets & Investing", sections.get("markets", []))}
+      {section_block("🤖", "Tech / AI / Apple", sections.get("tech_ai_apple", []))}
+      {section_block("🎮", "Gaming (major only)", sections.get("gaming_major", []))}
+      {section_block("🎧", "Nieuwe podcasts", sections.get("podcasts_new", []))}
+
+      <div style="margin-top:26px;color:#777;font-size:12px;">
+        Tip: scan, klik alleen wat je aanspreekt — geen doomscroll nodig 🙂
+      </div>
+    </div>
+    """
+    return html_out
+
+
+def send_via_resend(subject: str, html_body: str) -> None:
+    api_key = os.environ["RESEND_API_KEY"]
+    to_email = os.environ["DIGEST_TO_EMAIL"]
+    from_email = os.environ["DIGEST_FROM_EMAIL"]
+
+    payload = {"from": from_email, "to": [to_email], "subject": subject, "html": html_body}
 
     r = requests.post(
         "https://api.resend.com/emails",
-        headers={
-            "Authorization": f"Bearer {os.environ['RESEND_API_KEY']}",
-            "Content-Type": "application/json"
-        },
-        json={
-            "from": os.environ["DIGEST_FROM_EMAIL"],
-            "to": [os.environ["DIGEST_TO_EMAIL"]],
-            "subject": subject,
-            "html": html_body
-        }
+        headers={"Authorization": f"Bearer {api_key}", "Content-Type": "application/json"},
+        json=payload,
+        timeout=30,
     )
-
     if r.status_code >= 300:
-        raise RuntimeError(r.text)
+        raise RuntimeError(f"Resend error {r.status_code}: {r.text}")
 
 
 # -------------------------
-# MAIN
+# Main
 # -------------------------
-
-def main():
-
+def main() -> None:
     cfg = load_config("sources.json")
-    since = now_utc() - timedelta(hours=24)
+    lookback_hours = int(cfg.get("lookback_hours", 24))
+    since = now_utc() - timedelta(hours=lookback_hours)
 
+    # Build section limits dict from JSON sections list
+    sec_limits: Dict[str, int] = {}
+    for s in (cfg.get("sections") or []):
+        sid = s.get("id")
+        if not sid:
+            continue
+        mapped = SECTION_ALIASES.get(sid, sid)
+        sec_limits[mapped] = int(s.get("max_items", 5))
+
+    # Fetch
     all_items: List[Item] = []
+    for s in (cfg.get("sections") or []):
+        sid = s.get("id")
+        if not sid:
+            continue
+        sources = s.get("sources") or []
+        all_items.extend(fetch_section_from_json(sid, sources, since))
 
-    rss_cfg = cfg.get("rss", {})
-
-    for section, urls in rss_cfg.items():
-        all_items.extend(fetch_rss_section(section, urls, since))
-
+    # Dedupe globally
     all_items = dedupe(all_items)
 
+    # Group by section (mapped keys)
     by_section: Dict[str, List[Item]] = {}
-
     for it in all_items:
         by_section.setdefault(it.section, []).append(it)
 
-    sec_limits_raw = cfg.get("sections", [])
-
-    if isinstance(sec_limits_raw, list):
-        sec_limits = {}
-        for s in sec_limits_raw:
-            sid = s.get("id")
-            if sid:
-                sid = SECTION_ALIASES.get(sid, sid)
-                sec_limits[sid] = s
-    else:
-        sec_limits = sec_limits_raw
-
-    sections: Dict[str, List[Item]] = {}
-
+    # Apply caps (simple default to avoid 10x same publisher)
+    sections_out: Dict[str, List[Item]] = {}
     for sec, items in by_section.items():
-        max_items = sec_limits.get(sec, {}).get("max_items", 5)
-        sections[sec] = pick(items, max_items)
+        items = cap_per_source(items, 3)
+        sections_out[sec] = pick(items, sec_limits.get(sec, 5))
 
-    subject = f"Jeffrey’s Daily — {datetime.now().strftime('%Y-%m-%d')}"
-    html_body = render_email_html(cfg, sections)
-
+    subject = f"{cfg.get('meta', {}).get('digest_name', 'Jeffrey’s Daily')} — {datetime.now().strftime('%Y-%m-%d')}"
+    html_body = render_email_html(cfg, sections_out)
     send_via_resend(subject, html_body)
 
 
