@@ -1,16 +1,22 @@
 name: Jeffrey’s Daily (19:00)
 
 on:
+  # Tijdelijk: elke 15 min om te testen of schedules lopen
   schedule:
-    # GitHub Actions cron is in UTC.
-    # 19:00 Europe/Amsterdam (CET, UTC+1) = 18:00 UTC
-    # In zomertijd (CEST, UTC+2) wordt dit 17:00 UTC (1 uur eerder aanpassen).
     - cron: "*/15 * * * *"
+
+  # Handmatig kunnen starten
   workflow_dispatch: {}
+
+  # Hack: forceer GitHub om workflow + schedule goed te registreren
+  push:
+    branches:
+      - main
 
 jobs:
   run-digest:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
@@ -22,6 +28,7 @@ jobs:
 
       - name: Install dependencies
         run: |
+          python -m pip install --upgrade pip
           pip install -r requirements.txt
 
       - name: Run digest
