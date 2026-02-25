@@ -5,7 +5,7 @@ on:
     # GitHub Actions cron is in UTC.
     # 19:00 Europe/Amsterdam (CET, UTC+1) = 18:00 UTC
     # In zomertijd (CEST, UTC+2) wordt dit 17:00 UTC (1 uur eerder aanpassen).
-    - cron: "0 18 * * *"
+    - cron: "*/15 * * * *"
   workflow_dispatch: {}
 
 jobs:
